@@ -2,11 +2,13 @@ package demo
 
 import (
 	"dbt-rules/RULES/hdl"
+	"dbt-rules/RULES/xilinx"
+	"hdmi-dbt-demo/RULES/fpga"
 
 	"hdmi-dbt-demo/hdmi"
 )
 
-var Zybo = hdl.Fpga{
+var Project = hdl.Fpga{
 	Name: "ZyboHdmiDemo",
 	Top:  "top",
 	Part: "xc7z010clg400-1",
@@ -18,4 +20,24 @@ var Zybo = hdl.Fpga{
 		),
 		IpDeps: []hdl.Ip{hdmi.HdmiLib},
 	},
+}
+
+var Bitstream = xilinx.Bitstream{
+	Name:        "top",
+	Src:         in("top.sv"),
+	Constraints: in("zybo.xdc"),
+	Ips: []hdl.Ip{
+		hdl.Library{
+			Srcs: ins(
+				"video_mmcm.sv",
+			),
+		},
+		hdmi.HdmiLib,
+	},
+}
+
+var FlashBitstream = fpga.FlashFpga{
+	Out:       out("flash_script.tcl"),
+	Bitstream: Bitstream,
+	Target:    "xc7z010_1",
 }

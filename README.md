@@ -6,7 +6,7 @@ and refresh rates.
 
 The demonstration uses a Digilent Zybo board and a resolution of 1280 x 720 @ 60 fps.
 
-## Building
+## Building and flashing
 
 - Install `dbt` using `go`:
 
@@ -21,10 +21,8 @@ go install github.com/daedaleanai/dbt/v3@latest
 dbt sync
 ```
 
-- Run the synthesis, place, route and bitstream generation with:
+- Flash the bitstream with:
 
 ```sh
-dbt build //hdmi-dbt-demo/demo/Zybo
+dbt run //hdmi-dbt-demo/demo/FlashBitstream
 ```
-
-- Find the bitstream in `BUILD/OUTPUT/ZyboHdmiDemo/top.runs/impl_1/top.bit`

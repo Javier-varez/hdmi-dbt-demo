@@ -9,3 +9,4 @@ dependencies:
 flags:
   hdl-implementation: vivado
   hdl-implementation-step: bitstream
+  part: xc7z010clg400-1
