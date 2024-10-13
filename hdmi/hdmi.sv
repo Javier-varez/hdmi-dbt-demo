@@ -2,16 +2,16 @@ module hdmi#(
     // 640 x 480 @ 60 fps
     // pix_clk 25.2 MHz
     // serial_clk 126 MHz
-    parameter HACTIVE = 640,
-    parameter HFPORCH = 16,
-    parameter HSYNC = 96,
-    parameter HBPORCH = 48,
-    parameter HSYNC_POL = 1'b0,
-    parameter VACTIVE = 480,
-    parameter VFPORCH = 10,
-    parameter VSYNC = 2,
-    parameter VBPORCH = 33,
-    parameter VSYNC_POL = 1'b0
+    parameter integer HACTIVE = 640,
+    parameter integer HFPORCH = 16,
+    parameter integer HSYNC = 96,
+    parameter integer HBPORCH = 48,
+    parameter logic HSYNC_POL = 1'b0,
+    parameter integer VACTIVE = 480,
+    parameter integer VFPORCH = 10,
+    parameter integer VSYNC = 2,
+    parameter integer VBPORCH = 33,
+    parameter logic VSYNC_POL = 1'b0
 )(
     input [7:0] r,
     input [7:0] g,
@@ -38,11 +38,11 @@ module hdmi#(
 
     wire hs_clk;
 
-    localparam HTOTAL = HACTIVE + HFPORCH + HSYNC + HBPORCH;
-    localparam VTOTAL = VACTIVE + VFPORCH + VSYNC + VBPORCH;
+    localparam integer Htotal = HACTIVE + HFPORCH + HSYNC + HBPORCH;
+    localparam integer Vtotal = VACTIVE + VFPORCH + VSYNC + VBPORCH;
 
     always_ff @(posedge pix_clk)
-        if (reset || (hcounter == (HTOTAL-1)))
+        if (reset || (hcounter == (Htotal-1)))
             hcounter <= 0;
         else
             hcounter <= hcounter + 16'd1;
@@ -50,21 +50,21 @@ module hdmi#(
     always_ff @(posedge pix_clk)
         if (reset)
             vcounter <= 0;
-        else if (hcounter == (HTOTAL-1))
-            if (vcounter == (VTOTAL-1))
+        else if (hcounter == (Htotal-1))
+            if (vcounter == (Vtotal-1))
                 vcounter <= 0;
             else
                 vcounter <= vcounter + 16'd1;
         else
             vcounter <= vcounter;
 
-    localparam HSYNC_BEGIN = HACTIVE + HFPORCH;
-    localparam HSYNC_END = HACTIVE + HFPORCH + HSYNC;
-    localparam VSYNC_BEGIN = VACTIVE + VFPORCH;
-    localparam VSYNC_END = VACTIVE + VFPORCH + VSYNC;
+    localparam integer HsyncBegin = HACTIVE + HFPORCH;
+    localparam integer HsyncEnd = HACTIVE + HFPORCH + HSYNC;
+    localparam integer VsyncBegin = VACTIVE + VFPORCH;
+    localparam integer VsyncEnd = VACTIVE + VFPORCH + VSYNC;
 
-    assign hsync = ((vcounter >= HSYNC_BEGIN) && (vcounter < HSYNC_END)) ? HSYNC_POL : ~HSYNC_POL;
-    assign vsync = ((hcounter >= VSYNC_BEGIN) && (hcounter < VSYNC_END)) ? VSYNC_POL : ~VSYNC_POL;
+    assign hsync = ((vcounter >= HsyncBegin) && (vcounter < HsyncEnd)) ? HSYNC_POL : ~HSYNC_POL;
+    assign vsync = ((hcounter >= VsyncBegin) && (hcounter < VsyncEnd)) ? VSYNC_POL : ~VSYNC_POL;
     assign disp_en = (vcounter < VACTIVE) && (hcounter < HACTIVE);
 
     assign row = vcounter;

@@ -37,7 +37,9 @@ module tmds_encoder(
     assign xnor_out[6] = ~(xnor_out[5] ^ data[6]);
     assign xnor_out[7] = ~(xnor_out[6] ^ data[7]);
 
-    assign q_m[8:0] = ((n_ones > 4'd4) || ((n_ones == 4'd4) && data[0] == 0)) ? { 1'b0, xnor_out[7:0] } : { 1'b1, xor_out[7:0] };
+    assign q_m[8:0] = ((n_ones > 4'd4) || ((n_ones == 4'd4) && data[0] == 0)) ?
+                      { 1'b0, xnor_out[7:0] } :
+                      { 1'b1, xor_out[7:0] };
 
     assign n_ones_q_m = q_m[0] + q_m[1] + q_m[2] + q_m[3] + q_m[4] + q_m[5] + q_m[6] + q_m[7];
     assign n_zeros_q_m = 8 - n_ones_q_m;
@@ -61,13 +63,19 @@ module tmds_encoder(
             else
                 balance <= balance + (n_ones_q_m - n_zeros_q_m);
         else if (invert)
-            balance <= balance + {6'b0, q_m[8], 1'b0} + { 4'b0, n_zeros_q_m } - { 4'b0, n_ones_q_m };
+            balance <= balance +
+                       {6'b0, q_m[8], 1'b0} +
+                       { 4'b0, n_zeros_q_m } -
+                       { 4'b0, n_ones_q_m };
         else
-            balance <= balance - {6'b0, ~q_m[8], 1'b0} - { 4'b0, n_zeros_q_m } + { 4'b0, n_ones_q_m };
+            balance <= balance -
+                       {6'b0, ~q_m[8], 1'b0} -
+                       { 4'b0, n_zeros_q_m } +
+                       { 4'b0, n_ones_q_m };
 
     always_comb
         if (blanking)
-            case (control_data)
+            unique case (control_data)
                 2'b00:
                     encoded_data[9:0] = 10'b1101010100;
                 2'b01:
