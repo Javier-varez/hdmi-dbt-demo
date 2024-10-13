@@ -1,4 +1,4 @@
-package demo
+package zybo
 
 import (
 	"dbt-rules/RULES/hdl"
@@ -37,7 +37,7 @@ var Bitstream = xilinx.Bitstream{
 }
 
 var FlashBitstream = fpga.FlashFpga{
-	Out:       out("flash_script.tcl"),
+	Out:       out("flash_script_zybo.tcl"),
 	Bitstream: Bitstream,
 	Target:    "xc7z010_1",
 }

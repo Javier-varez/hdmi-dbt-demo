@@ -8,5 +8,5 @@ dependencies:
     type: ""
 flags:
   hdl-implementation: vivado
-  hdl-implementation-step: bitstream
-  part: xc7z010clg400-1
+  hdl-implementation-step: project
+  part: xc7a100tcsg324-1
