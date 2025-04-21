@@ -17,7 +17,15 @@ module tmds_encoder(
     logic balanced;
     logic invert;
 
-    assign n_ones = data[0] + data[1] + data[2] + data[3] + data[4] + data[5] + data[6] + data[7];
+    assign n_ones =
+        { 3'b0, data[0] } +
+        { 3'b0, data[1] } +
+        { 3'b0, data[2] } +
+        { 3'b0, data[3] } +
+        { 3'b0, data[4] } +
+        { 3'b0, data[5] } +
+        { 3'b0, data[6] } +
+        { 3'b0, data[7] };
 
     assign xor_out[0] = data[0];
     assign xor_out[1] = xor_out[0] ^ data[1];
@@ -41,12 +49,24 @@ module tmds_encoder(
                       { 1'b0, xnor_out[7:0] } :
                       { 1'b1, xor_out[7:0] };
 
-    assign n_ones_q_m = q_m[0] + q_m[1] + q_m[2] + q_m[3] + q_m[4] + q_m[5] + q_m[6] + q_m[7];
+    assign n_ones_q_m =
+        { 3'b0, q_m[0] } +
+        { 3'b0, q_m[1] } +
+        { 3'b0, q_m[2] } +
+        { 3'b0, q_m[3] } +
+        { 3'b0, q_m[4] } +
+        { 3'b0, q_m[5] } +
+        { 3'b0, q_m[6] } +
+        { 3'b0, q_m[7] };
     assign n_zeros_q_m = 8 - n_ones_q_m;
 
     assign balanced = (n_ones_q_m == 4'd4) || (balance == 8'd0);
 
     assign invert = ((n_ones_q_m > 4'd4) && ~balance[7]) || ((n_ones_q_m <= 4'd4) && balance[7]);
+
+    logic [3:0] n_cur_balance, n_cur_balance_inv;
+    assign n_cur_balance = n_ones_q_m - n_zeros_q_m;
+    assign n_cur_balance_inv = n_zeros_q_m - n_ones_q_m;
 
     always_comb
         if (balanced)
@@ -59,9 +79,9 @@ module tmds_encoder(
             balance <= 0;
         else if (balanced)
             if (q_m[8] == 0)
-                balance <= balance + (n_zeros_q_m - n_ones_q_m);
+                balance <= balance + {{4{n_cur_balance_inv[3]}}, n_cur_balance_inv};
             else
-                balance <= balance + (n_ones_q_m - n_zeros_q_m);
+                balance <= balance + {{4{n_cur_balance[3]}}, n_cur_balance};
         else if (invert)
             balance <= balance +
                        {6'b0, q_m[8], 1'b0} +

@@ -12,7 +12,7 @@ module top(
 
     assign hdmi_out_en = 1'b1;
 
-     video_mmcm pix_clk_gen(
+    video_mmcm pix_clk_gen(
         .pix_clk(pix_clk),
         .serial_clk(serial_clk),
         .sys_clk(sys_clk)

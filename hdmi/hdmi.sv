@@ -36,7 +36,8 @@ module hdmi#(
 
     logic [9:0] encoded_r, encoded_g, encoded_b;
 
-    wire hs_clk;
+    logic hs_clk;
+    logic disp_en;
 
     localparam integer Htotal = HACTIVE + HFPORCH + HSYNC + HBPORCH;
     localparam integer Vtotal = VACTIVE + VFPORCH + VSYNC + VBPORCH;
