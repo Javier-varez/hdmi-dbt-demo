@@ -6,6 +6,7 @@ import (
 	"hdmi-dbt-demo/RULES/fpga"
 
 	"hdmi-dbt-demo/hdmi"
+	"hdmi-dbt-demo/utils"
 )
 
 var Project = hdl.Fpga{
@@ -18,7 +19,7 @@ var Project = hdl.Fpga{
 			"video_mmcm.sv",
 			"arty.xdc",
 		),
-		IpDeps: []hdl.Ip{hdmi.HdmiLib},
+		IpDeps: []hdl.Ip{hdmi.HdmiLib, utils.ResetLib},
 	},
 }
 
@@ -33,6 +34,7 @@ var Bitstream = xilinx.Bitstream{
 			),
 		},
 		hdmi.HdmiLib,
+		utils.ResetLib,
 	},
 }
 

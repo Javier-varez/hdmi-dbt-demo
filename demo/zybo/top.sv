@@ -18,8 +18,13 @@ module top(
         .sys_clk(sys_clk)
     );
 
-    logic [9:0] row, column;
+    logic internal_reset;
+    reset reset_instance (
+        .sys_clk(pix_clk),
+        .reset(internal_reset)
+    );
 
+    logic [9:0] row, column;
     hdmi #(
         // 1280 x 720 @ 60 fps
         // pix_clk 74.25 MHz
@@ -40,7 +45,7 @@ module top(
         .b(255 - row[7:1] - column[7:1]),
         .serial_clk(serial_clk),
         .pix_clk(pix_clk),
-        .reset(reset),
+        .reset(reset || internal_reset),
         .ch_r_p(hdmi_d_p[2]),
         .ch_r_n(hdmi_d_n[2]),
         .ch_g_p(hdmi_d_p[1]),

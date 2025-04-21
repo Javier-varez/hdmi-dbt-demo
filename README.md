@@ -24,5 +24,5 @@ dbt sync
 - Flash the bitstream with:
 
 ```sh
-dbt run //hdmi-dbt-demo/demo/FlashBitstream
+dbt run //hdmi-dbt-demo/demo/arty/FlashBitstream
 ```
