@@ -11,7 +11,6 @@
       pkgs = nixpkgs.legacyPackages.${system};
       shell = pkgs.mkShellNoCC {
         packages = [ dbt.packages.${system}.dbt ];
-        command = "nu";
       };
     in
     {
