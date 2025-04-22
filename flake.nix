@@ -1,24 +1,20 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+    dbt.url = "github:javier-varez/dbt";
   };
 
   outputs =
-    { nixpkgs, ... }:
+    { nixpkgs, dbt, ... }:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
-      fhs = pkgs.buildFHSUserEnv {
-        name = "fhs-shell";
-
-        targetPkgs = pkgs: [
-          pkgs.go
-          pkgs.ninja
-        ];
-        runScript = "nu";
+      shell = pkgs.mkShellNoCC {
+        packages = [ dbt.packages.${system}.dbt ];
+        command = "nu";
       };
     in
     {
-      devShells.${system}.default = fhs.env;
+      devShells.${system}.default = shell;
     };
 }
